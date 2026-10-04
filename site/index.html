@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MIST Revision</title>
+<meta name="description" content="MIST Unit-A রিভিশন: বিষয়ভিত্তিক রিভিশন শিট, লুকানো সমাধান, বিগত বছরের প্রশ্ন ও অধ্যায়ের গুরুত্ব তালিকা।">
+<meta name="theme-color" content="#0a120d">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="icon" href="favicon-64.png" sizes="64x64" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="vendor/katex/katex.min.css">
+<link rel="stylesheet" href="style.css?v=1791091926">
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#/"><img class="logo" src="logo.png" alt="" width="34" height="34"><span class="brand-t">MIST Revision</span></a>
+    <nav id="nav" aria-label="প্রধান মেনু">
+      <a href="#/" data-r="home">হোম</a>
+      <a href="#/s/Phy" data-r="Phy">পদার্থ</a>
+      <a href="#/s/Chem" data-r="Chem">রসায়ন</a>
+      <a href="#/s/Math" data-r="Math">গণিত</a>
+      <a href="#/bank" data-r="bank">প্রশ্নব্যাংক</a>
+      <a href="#/map" data-r="map">গুরুত্ব তালিকা</a>
+    </nav>
+  </div>
+</header>
+<main id="app" class="wrap" aria-live="polite"></main>
+<footer class="foot wrap">MIST Unit-A · পূর্ণ সিলেবাস · রিভিশন হাব। অগ্রগতি শুধু এই ডিভাইসের ব্রাউজারে সংরক্ষিত থাকে।</footer>
+
+<div id="lb" class="lb" hidden>
+  <div class="lb-bar">
+    <div id="lb-cap" class="lb-cap"></div>
+    <div class="lb-btns">
+      <button id="lb-prev" aria-label="আগের পৃষ্ঠা">‹</button>
+      <button id="lb-next" aria-label="পরের পৃষ্ঠা">›</button>
+      <button id="lb-zoom" aria-label="জুম">জুম</button>
+      <button id="lb-close" aria-label="বন্ধ করো">✕</button>
+    </div>
+  </div>
+  <div id="lb-body" class="lb-body"><img id="lb-img" alt=""></div>
+</div>
+
+<script src="vendor/katex/katex.min.js"></script>
+<script src="vendor/katex/auto-render.min.js"></script>
+<script src="data/data.js?v=1791091926"></script>
+<script src="data/qs.js?v=1791091926"></script>
+<script src="app.js?v=1791091926"></script>
+</body>
+</html>

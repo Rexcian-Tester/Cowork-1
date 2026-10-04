@@ -1,0 +1,10 @@
+/qb/*
+  Cache-Control: public, max-age=31536000, immutable
+/rev/*
+  Cache-Control: public, max-age=86400
+/pdf/*
+  Cache-Control: public, max-age=86400
+/data/*
+  Cache-Control: no-cache
+/fig/*
+  Cache-Control: public, max-age=86400
