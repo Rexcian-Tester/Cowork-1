@@ -98,6 +98,8 @@ function home(){
     <div class="card stat"><b>${bn(realQ)}</b><span>আসল MIST প্রশ্ন (বিশ্লেষিত)</span></div>
     <div class="card stat"><b>${bn(chs.length)}</b><span>অধ্যায় র‍্যাংক করা</span></div>
   </section>
+  <section class="sec"><div class="row"><h2>🎯 Weak Spots</h2><span class="muted" style="font-size:14px">যেখানে বারবার ভুল হচ্ছে — আবার রিভিশন দাও</span></div>
+    <div class="grid g3">${Object.keys(D.subjects).map(s=>{const L=((X.weak||{})[s]||[]);return `<div class="card weak c-${s}"><h3>${SUBJ[s]}</h3>${L.length?L.map(w=>{const c=findCh(w.id);if(!c||!c.rev)return '';const p=revProgress(c.rev);return `<a class="wk" href="#/c/${encodeURIComponent(w.id)}/s${w.sec}"><b>${esc(w.t)}</b><span class="muted">${esc(c.bn)} · ${esc(w.d)}</span>${w.more?`<span class="muted">সাথে: ${esc(w.more)}</span>`:''}<span class="wk-go">রিভিশন শিটে যাও →</span></a><a class="wk-th" href="#/c/${encodeURIComponent(w.id)}/th">⚡ আগে থিওরি</a>`}).join(''):`<p class="muted" style="font-size:14px;margin:0">এখনো কিছু চিহ্নিত করা হয়নি।</p>`}</div>`}).join('')}</div></section>
   <section class="sec"><div class="row"><h2>বিষয় অনুযায়ী</h2></div>
     <div class="grid g3">${Object.entries(D.subjects).map(([s,v])=>`
       <a class="card subj c-${s}" href="#/s/${s}"><h3>${v.name}</h3>
@@ -209,7 +211,7 @@ function renderQs(c){
 function revCardHTML(key,cd,idx,total,m){
   const st=m[cd.n]||'';
   return `<article class="rcard ${st}" id="rc-${key}-${cd.n}" data-n="${cd.n}">
-    <div class="rhead"><b>প্রশ্ন ${bn(idx)}</b><span>/ ${bn(total)}</span><span class="sp"></span>${st==='ok'?'<span class="badge rev">✓ পেরেছি</span>':st==='again'?'<span class="badge full">↻ আবার</span>':''}</div>
+    <div class="rhead"><b>প্রশ্ন ${bn(idx)}</b><span>/ ${bn(total)}</span>${xsol(key,cd.n)?'<span class="sbadge">★ ধাপে ধাপে</span>':''}<span class="sp"></span>${st==='ok'?'<span class="badge rev">✓ পেরেছি</span>':st==='again'?'<span class="badge full">↻ আবার</span>':''}</div>
     <div class="rimg"><img class="qimg" loading="lazy" src="${cd.q}" width="${cd.qs[0]}" height="${cd.qs[1]}" alt="প্রশ্ন ${idx}"></div>
     <div class="solslot"></div>
     <div class="ractions">
@@ -218,15 +220,25 @@ function revCardHTML(key,cd,idx,total,m){
       <button class="btn sm warn" data-act="mark" data-v="again">↻ আবার দেখব</button>
     </div></article>`;
 }
+const X=window.EXTRA||{};
+const xsol=(key,n)=>((X.sols||{})[key]||{})[n];
+const xnote=(key,n)=>((X.notes||{})[key]||{})[n];
+let RVIEW='cards';
 function paintRev(key,filter){
   const r=D.rev[key],m=marks(key);
   const list=$('#rvlist');if(!list)return;
+  document.querySelectorAll('[data-rview]').forEach(b=>b.classList.toggle('on',b.dataset.rview===RVIEW));
+  const tools=$('#rvfilters');if(tools)tools.hidden=RVIEW==='theory';
+  if(RVIEW==='theory'){
+    list.innerHTML=`<div class="theory card">${(X.theory||{})[key]||''}<div class="row" style="margin-top:14px"><button class="btn primary" data-rview="cards">প্রশ্ন কার্ডে ফিরে যাও →</button></div></div>`;
+    renderMath(list);return;
+  }
   let html='';let lastSec=null;
   r.cards.forEach((cd,i)=>{
     const st=m[cd.n]||'';
     if(filter==='todo'&&st==='ok')return;
     if(filter==='again'&&st!=='again')return;
-    if(r.sections){const s=r.sections.find(x=>cd.n>=x[0]&&cd.n<=x[1]);if(s&&s[2]!==lastSec){html+=`<div class="rv-sec">${esc(s[2])}</div>`;lastSec=s[2]}}
+    if(r.sections){const si=r.sections.findIndex(x=>cd.n>=x[0]&&cd.n<=x[1]),s=r.sections[si];if(s&&s[2]!==lastSec){const th=((X.secTheory||{})[key]||{})[si];html+=`<div class="rv-sec" id="sec-${si}">${esc(s[2])}</div>${th?`<button class="th-link" data-th="${th[0]}">⚡ ${esc(th[1])} →</button>`:''}`;lastSec=s[2]}}
     html+=revCardHTML(key,cd,i+1,r.cards.length,m);
   });
   list.innerHTML=html||'<div class="empty"><b>দারুণ!</b>এই ফিল্টারে আর কোনো প্রশ্ন বাকি নেই।</div>';
@@ -234,11 +246,12 @@ function paintRev(key,filter){
   $('#rvprog').innerHTML=`<div class="bar"><i style="width:${p.ok/p.total*100}%"></i></div><div class="row muted" style="font-size:14px"><span>পেরেছি <b style="color:var(--ok)">${bn(p.ok)}</b></span><span>আবার <b style="color:var(--warn)">${bn(p.again)}</b></span><span>বাকি ${bn(p.total-p.ok-p.again)}</span></div>`;
   document.querySelectorAll('[data-rf]').forEach(b=>b.classList.toggle('on',b.dataset.rf===filter));
 }
-function chapterPage(id){
+function chapterPage(id,flag){
   const c=findCh(id);if(!c)return notFound();
   store.set('mist.last',c.id);
   const key=c.rev,r=key?D.rev[key]:null;
   let filter='all';
+  RVIEW=flag==='th'&&key&&(X.theory||{})[key]?'theory':'cards';
   const sumQ=c.nreal+c.nmt;
   app.innerHTML=`<div class="fade">
     <div class="crumbs"><a href="#/">হোম</a> › <a href="#/s/${c.sub}">${SUBJ[c.sub]}</a> › ${esc(c.bn)}</div>
@@ -262,9 +275,10 @@ function chapterPage(id){
       <section class="pane show" id="pane-rev">
         <h2>তোমার রিভিশন শিট ${r?`<small>${bn(r.cards.length)}টি প্রশ্ন</small>`:''}</h2>
         ${r?`<div class="card rv-tools"><div class="row"><b style="font-family:var(--display)">${esc(r.title)}</b><span class="sp"></span><a class="btn sm" href="${r.pdf}" target="_blank" rel="noopener">PDF খোলো ↗</a></div><div class="muted" style="font-size:14px;margin-top:-6px">${esc(r.sub)}</div>
-          <div id="rvprog"></div>
+          ${(X.theory||{})[key]?`<div class="seg"><button data-rview="cards">📝 প্রশ্ন কার্ড</button><button data-rview="theory">⚡ দ্রুত থিওরি</button></div>`:''}
+          <div id="rvfilters" class="col"><div id="rvprog"></div>
           <div class="row"><button class="chip" data-rf="all">সব</button><button class="chip" data-rf="todo">বাকি</button><button class="chip" data-rf="again">↻ আবার</button><span class="sp"></span><button class="btn sm" data-act="hideall">সব সমাধান লুকাও</button><button class="btn sm" data-act="reset">রিসেট</button></div>
-          <div class="muted" style="font-size:13.5px">প্রশ্ন পড়ে নিজে করো → “সমাধান দেখো” চাপলে তবেই উত্তর আসবে।</div></div>
+          <div class="muted" style="font-size:13.5px">প্রশ্ন পড়ে নিজে করো → “সমাধান দেখো” চাপলে তবেই উত্তর আসবে।${Object.keys((X.sols||{})[key]||{}).length?' ★ চিহ্নিত প্রশ্নে শিটের ছোট সমাধানের বদলে ধাপে ধাপে লেখা সমাধান আছে।':''}</div></div></div>
           <div id="rvlist"></div>`
         :`<div class="card empty"><b>এই অধ্যায়ের রিভিশন শিট এখনো যোগ হয়নি</b>শিট তৈরি হলে এখানে প্রশ্ন ও লুকানো সমাধান আসবে। ততক্ষণ ডানদিকের বিগত বছরের প্রশ্ন দিয়ে অনুশীলন করো।</div>`}
       </section>
@@ -274,7 +288,9 @@ function chapterPage(id){
         <div id="qs"></div>
       </section>
     </div></div>`;
-  if(r)paintRev(key,filter);
+  if(r){paintRev(key,filter);
+    if(flag&&/^s\d+$/.test(flag)){const el=$('#sec-'+flag.slice(1));if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),60)}
+    else if(RVIEW==='theory')setTimeout(()=>$('#pane-rev').scrollIntoView({block:'start'}),60)}
   const paintQ=()=>{renderQs(c);document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===qstate.view));document.querySelectorAll('[data-qf]').forEach(b=>b.classList.toggle('on',b.dataset.qf===qstate.f))};
   paintQ();
   app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{qstate.view=b.dataset.v;paintQ()});
@@ -287,6 +303,9 @@ function chapterPage(id){
   app.onclick=e=>{
     const pg=e.target.closest('[data-pg]');if(pg){openLB(+pg.dataset.pg);return}
     const im=e.target.closest('.rimg img,.qfig,.sfig');if(im){openImg(im.currentSrc||im.src,im.alt);return}
+    const rv=e.target.closest('[data-rview]');if(rv&&r){RVIEW=rv.dataset.rview;paintRev(key,filter);$('#pane-rev').scrollIntoView({block:'start'});return}
+    const jp=e.target.closest('[data-jump],[data-th]');if(jp&&r){const id=jp.dataset.jump||jp.dataset.th;if(RVIEW!=='theory'){RVIEW='theory';paintRev(key,filter)}const el=document.getElementById(id);if(el)el.scrollIntoView({block:'start'});return}
+    const og=e.target.closest('[data-act="orig"]');if(og){const c2=og.closest('.rcard'),cd2=r.cards.find(x=>x.n===+c2.dataset.n),slot=c2.querySelector('.origslot');if(slot.innerHTML){slot.innerHTML='';og.textContent='মূল শিটের সমাধান দেখো'}else{slot.innerHTML=`<div class="rimg sol"><img src="${cd2.full||cd2.a}" alt="মূল শিটের সমাধান"></div>`;og.textContent='মূল শিটের সমাধান লুকাও'}return}
     const act=e.target.closest('[data-act]');if(!act)return;
     const a=act.dataset.act;
     if(qAction(act))return;
@@ -307,15 +326,21 @@ function chapterPage(id){
   };
   function showSol(card,cd,btn){
     card.dataset.open='1';
-    if(cd.full){card.querySelector('.qimg').src=cd.full;card.querySelector('.qimg').height=0}
-    else card.querySelector('.solslot').innerHTML=`<div class="rimg sol"><img src="${cd.a}" width="${cd.as[0]}" height="${cd.as[1]}" alt="সমাধান"></div>`;
+    const slot=card.querySelector('.solslot'),ts=xsol(key,cd.n),nt=xnote(key,cd.n);
+    if(ts){slot.innerHTML=`<div class="sbody tsol">${ts}</div><div class="row"><button class="btn sm" data-act="orig">মূল শিটের সমাধান দেখো</button></div><div class="origslot"></div>`}
+    else{
+      if(cd.full){card.querySelector('.qimg').src=cd.full;card.querySelector('.qimg').height=0}
+      else slot.innerHTML=`<div class="rimg sol"><img src="${cd.a}" width="${cd.as[0]}" height="${cd.as[1]}" alt="সমাধান"></div>`;
+      if(nt)slot.insertAdjacentHTML('beforeend',`<div class="tip">✎ ${nt}</div>`);
+    }
+    renderMath(slot);
     btn.textContent='সমাধান লুকাও';btn.classList.remove('primary');
   }
   function hideSol(card){
     if(card.dataset.open!=='1')return;
     const n=+card.dataset.n,cd=r.cards.find(x=>x.n===n);
     card.dataset.open='0';
-    if(cd.full){const im=card.querySelector('.qimg');im.src=cd.q;im.height=cd.qs[1]}
+    if(cd.full&&!xsol(key,cd.n)){const im=card.querySelector('.qimg');im.src=cd.q;im.height=cd.qs[1]}
     card.querySelector('.solslot').innerHTML='';
     const b=card.querySelector('.reveal-btn');b.textContent='সমাধান দেখো';b.classList.add('primary');
   }
@@ -410,7 +435,7 @@ function route(){
   document.querySelectorAll('#nav a').forEach(x=>x.classList.remove('on'));
   let nav='home';
   if(a==='s'){nav=b;subjectPage(b)}
-  else if(a==='c'){const c=findCh(rest);nav=c?c.sub:'home';chapterPage(rest)}
+  else if(a==='c'){const [cid,flag]=rest.split('/');const c=findCh(cid);nav=c?c.sub:'home';chapterPage(cid,flag)}
   else if(a==='bank'){nav='bank';bankPage()}
   else if(a==='map'){nav='map';mapPage()}
   else home();
