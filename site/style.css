@@ -304,3 +304,12 @@ html,body{overflow-x:hidden}
 .wk-th{font-size:14px;font-weight:600;color:var(--accent);text-decoration:none;align-self:flex-start}
 .tsol+.row{padding:0 16px 10px}.origslot:empty{display:none}
 [hidden]{display:none!important}
+.tnote{display:flex;flex-direction:column;gap:10px;padding:12px}
+.tnote .row{flex-wrap:wrap;gap:8px}
+.tnote iframe{width:100%;height:calc(100vh - 140px);height:calc(100dvh - 140px);min-height:480px;border:1px solid var(--line);border-radius:10px;background:var(--bg)}
+.cols.wide{grid-template-columns:minmax(0,1fr)}
+.cols.wide>.pane{display:none}.cols.wide>.pane.show{display:block}
+.tabs.wide{display:flex}
+.tnote.max{position:fixed;inset:0;z-index:90;margin:0;border-radius:0;border:0;padding:8px 10px calc(8px + env(safe-area-inset-bottom));padding-top:calc(8px + env(safe-area-inset-top))}
+.tnote.max iframe{flex:1;height:auto;min-height:0;border-radius:8px}
+body.noscroll{overflow:hidden}

@@ -224,11 +224,32 @@ const X=window.EXTRA||{};
 const xsol=(key,n)=>((X.sols||{})[key]||{})[n];
 const xnote=(key,n)=>((X.notes||{})[key]||{})[n];
 let RVIEW='cards';
+// theory note gets the full width; past questions move behind the top tabs
+function noteLayout(on){
+  const cols=$('.cols'),tabs=$('.tabs');if(!cols||!tabs)return;
+  if(cols.classList.contains('wide')===on)return;
+  cols.classList.toggle('wide',on);tabs.classList.toggle('wide',on);
+  const rb=tabs.querySelector('[data-tab="rev"]');if(rb)rb.textContent=on?'📖 থিওরি নোট':'রিভিশন শিট';
+  tabs.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('on',x.dataset.tab==='rev'));
+  $('#pane-rev').classList.add('show');$('#pane-qs').classList.remove('show');
+  if(!on)noteMax(false);
+}
+function noteMax(on){
+  const t=$('.tnote');if(t)t.classList.toggle('max',on);
+  document.body.classList.toggle('noscroll',!!(t&&on));
+  const b=t&&t.querySelector('[data-act="notemax"]');if(b)b.textContent=on?'✕ ছোট করো':'⛶ পুরো স্ক্রিন';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('.tnote.max'))noteMax(false)});
 function paintRev(key,filter){
   const r=D.rev[key],m=marks(key);
   const list=$('#rvlist');if(!list)return;
   document.querySelectorAll('[data-rview]').forEach(b=>b.classList.toggle('on',b.dataset.rview===RVIEW));
-  const tools=$('#rvfilters');if(tools)tools.hidden=RVIEW==='theory';
+  const tools=$('#rvfilters');if(tools)tools.hidden=RVIEW!=='cards';
+  noteLayout(RVIEW==='note');
+  if(RVIEW==='note'){
+    list.innerHTML=`<div class="tnote card"><div class="row"><b>📖 থিওরি নোট</b><span class="sp"></span><button class="btn sm" data-act="notemax">⛶ পুরো স্ক্রিন</button><a class="btn sm" href="${r.note}" target="_blank" rel="noopener">নতুন ট্যাবে ↗</a><button class="btn sm primary" data-rview="cards">প্রশ্ন কার্ডে ফিরে যাও →</button></div><iframe src="${r.note}" title="${esc(r.title)} থিওরি নোট" loading="lazy"></iframe></div>`;
+    return;
+  }
   if(RVIEW==='theory'){
     list.innerHTML=`<div class="theory card">${(X.theory||{})[key]||''}<div class="row" style="margin-top:14px"><button class="btn primary" data-rview="cards">প্রশ্ন কার্ডে ফিরে যাও →</button></div></div>`;
     renderMath(list);return;
@@ -251,7 +272,7 @@ function chapterPage(id,flag){
   store.set('mist.last',c.id);
   const key=c.rev,r=key?D.rev[key]:null;
   let filter='all';
-  RVIEW=flag==='th'&&key&&(X.theory||{})[key]?'theory':'cards';
+  RVIEW=flag==='th'&&key&&(X.theory||{})[key]?'theory':flag==='tn'&&r&&r.note?'note':'cards';
   const sumQ=c.nreal+c.nmt;
   app.innerHTML=`<div class="fade">
     <div class="crumbs"><a href="#/">হোম</a> › <a href="#/s/${c.sub}">${SUBJ[c.sub]}</a> › ${esc(c.bn)}</div>
@@ -275,7 +296,7 @@ function chapterPage(id,flag){
       <section class="pane show" id="pane-rev">
         <h2>তোমার রিভিশন শিট ${r?`<small>${bn(r.cards.length)}টি প্রশ্ন</small>`:''}</h2>
         ${r?`<div class="card rv-tools"><div class="row"><b style="font-family:var(--display)">${esc(r.title)}</b><span class="sp"></span><a class="btn sm" href="${r.pdf}" target="_blank" rel="noopener">PDF খোলো ↗</a></div><div class="muted" style="font-size:14px;margin-top:-6px">${esc(r.sub)}</div>
-          ${(X.theory||{})[key]?`<div class="seg"><button data-rview="cards">📝 প্রশ্ন কার্ড</button><button data-rview="theory">⚡ দ্রুত থিওরি</button></div>`:''}
+          ${(X.theory||{})[key]||r.note?`<div class="seg"><button data-rview="cards">📝 প্রশ্ন কার্ড</button>${(X.theory||{})[key]?'<button data-rview="theory">⚡ দ্রুত থিওরি</button>':''}${r.note?'<button data-rview="note">📖 থিওরি নোট</button>':''}</div>`:''}
           <div id="rvfilters" class="col"><div id="rvprog"></div>
           <div class="row"><button class="chip" data-rf="all">সব</button><button class="chip" data-rf="todo">বাকি</button><button class="chip" data-rf="again">↻ আবার</button><span class="sp"></span><button class="btn sm" data-act="hideall">সব সমাধান লুকাও</button><button class="btn sm" data-act="reset">রিসেট</button></div>
           <div class="muted" style="font-size:13.5px">প্রশ্ন পড়ে নিজে করো → “সমাধান দেখো” চাপলে তবেই উত্তর আসবে।${Object.keys((X.sols||{})[key]||{}).length?' ★ চিহ্নিত প্রশ্নে শিটের ছোট সমাধানের বদলে ধাপে ধাপে লেখা সমাধান আছে।':''}</div></div></div>
@@ -290,7 +311,7 @@ function chapterPage(id,flag){
     </div></div>`;
   if(r){paintRev(key,filter);
     if(flag&&/^s\d+$/.test(flag)){const el=$('#sec-'+flag.slice(1));if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),60)}
-    else if(RVIEW==='theory')setTimeout(()=>$('#pane-rev').scrollIntoView({block:'start'}),60)}
+    else if(RVIEW!=='cards')setTimeout(()=>$('#pane-rev').scrollIntoView({block:'start'}),60)}
   const paintQ=()=>{renderQs(c);document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===qstate.view));document.querySelectorAll('[data-qf]').forEach(b=>b.classList.toggle('on',b.dataset.qf===qstate.f))};
   paintQ();
   app.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{qstate.view=b.dataset.v;paintQ()});
@@ -308,6 +329,7 @@ function chapterPage(id,flag){
     const og=e.target.closest('[data-act="orig"]');if(og){const c2=og.closest('.rcard'),cd2=r.cards.find(x=>x.n===+c2.dataset.n),slot=c2.querySelector('.origslot');if(slot.innerHTML){slot.innerHTML='';og.textContent='মূল শিটের সমাধান দেখো'}else{slot.innerHTML=`<div class="rimg sol"><img src="${cd2.full||cd2.a}" alt="মূল শিটের সমাধান"></div>`;og.textContent='মূল শিটের সমাধান লুকাও'}return}
     const act=e.target.closest('[data-act]');if(!act)return;
     const a=act.dataset.act;
+    if(a==='notemax'){noteMax(!$('.tnote.max'));return}
     if(qAction(act))return;
     if(!r)return;
     if(a==='hideall'){app.querySelectorAll('.rcard:not(.qcard)').forEach(hideSol);return}
@@ -428,6 +450,7 @@ function notFound(){app.innerHTML=`<div class="card empty"><b>পাতাটি
 
 /* router */
 function route(){
+  document.body.classList.remove('noscroll');
   const h=decodeURIComponent(location.hash.replace(/^#/,'')||'/');
   const [,a,b]=h.split('/');
   const rest=h.split('/').slice(2).join('/');
