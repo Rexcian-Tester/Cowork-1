@@ -36,3 +36,12 @@ All optional per-chapter extras live in `site/data/extra.js` (`window.EXTRA`), n
 - Don't add priority tiers to subject pages (the system site handles planning); subject pages show only revision material + "সব অধ্যায় দেখো".
 - Past questions (`site/data/qs.js`, key `year|Subject|qNo`) are already typed for all 234 questions — don't rebuild them.
 - Keep every deployed file < 25 MiB.
+
+## Tools (added with Dynamics / Work-Energy / Newtonian / Differentiation, Oct 2026)
+Scripts live in `tools/` next to this file; copy them to the scratchpad and run there.
+- `render.swift` → `swiftc -O render.swift -o render; ./render <pdf> <dir> 1400` (pages as `pNN.jpg`).
+- `seg3.py <dir>` — sheets whose cards are separated by full-width thin grey rules (>1240px, ≤5 rows) with a dotted Q/A line (gotibidya, kaj-shokti, অন্তরীকরণ). Page 1's title rule is skipped.
+- `segnm.py` — sheets with rounded, coloured card boxes and a shaded solution box (newtonian); Q/A split = top of the shaded box.
+- `cut2.py <dir> <key> 12` — crops (x 50–1350) and sanitises boxed MCQ options (green box → neutral 2px border, text greyed, ✓ removed). Check the card count against the sheet header ("মোট NNটি প্রশ্ন").
+- `diffsan.py` — plain-list MCQs (green bold option + √, "✗ (তোমার উত্তর)"): greys + thins the bold line, removes √, erases ✗ … to line end (✗ positions set per card).
+- These sheets' yellow highlight often hides fraction parts → add `notes` for every clipped one (22 in অন্তরীকরণ).
