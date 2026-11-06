@@ -45,3 +45,11 @@ Scripts live in `tools/` next to this file; copy them to the scratchpad and run 
 - `cut2.py <dir> <key> 12` — crops (x 50–1350) and sanitises boxed MCQ options (green box → neutral 2px border, text greyed, ✓ removed). Check the card count against the sheet header ("মোট NNটি প্রশ্ন").
 - `diffsan.py` — plain-list MCQs (green bold option + √, "✗ (তোমার উত্তর)"): greys + thins the bold line, removes √, erases ✗ … to line end (✗ positions set per card).
 - These sheets' yellow highlight often hides fraction parts → add `notes` for every clipped one (22 in অন্তরীকরণ).
+
+## Generic pipeline (added with Sprint 2, Nov 2026 — Function, Complex, Statics, Thermo, Ideal Gas, Qualitative)
+Needs `pip3 install --user numpy`. Render pages to `pg/<sheet>/pNN.jpg`, then:
+- `mont.py out.jpg pages…` — trimmed 3-column montage for reading/checking solutions (6 pages per image is legible).
+- `seg.py <sheets…>` → `cards.json`. Card finding: boxed cards (whitespace gaps + left border), rule-separated cards (full-width thin grey rules x 66–1334; page-1 title rule skipped), or `gap_cards` (blank gap ≥45px, for near-invisible borders). Q/A split: top of the shaded solution box (SHADE colour per sheet), bottom of the shaded question box (complex), or the dotted divider before "সমাধান". Edit the sheet→method mapping in `run()`.
+- `contact.py <sheets…>` — thumbnails with the red split line; check before cutting.
+- `cut.py <outdir>` — writes `cNN_q/_a/_full.jpg` + `<key>.json` cards. Sanitises green answer boxes (border recoloured grey, ✓ erased), "✗ (তোমার উত্তর)" / "← তোমার উত্তর" tags, and thermo-style ✔ markers (template-matched, replaced by ○).
+- Extras for these chapters live in `site/data/extra2.js` (merges into `window.EXTRA`); new chapters can follow that file. Attach a user's theory note PDF as trimmed page images (`rev/<key>/note_*.jpg`) inside the matching card's `sols` and the theory sheet.
