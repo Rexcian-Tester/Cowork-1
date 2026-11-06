@@ -99,7 +99,7 @@ function home(){
     <div class="card stat"><b>${bn(chs.length)}</b><span>অধ্যায় র‍্যাংক করা</span></div>
   </section>
   <section class="sec"><div class="row"><h2>🎯 Weak Spots</h2><span class="muted" style="font-size:14px">যেখানে বারবার ভুল হচ্ছে — আবার রিভিশন দাও</span></div>
-    <div class="grid g3">${Object.keys(D.subjects).map(s=>{const L=((X.weak||{})[s]||[]);return `<div class="card weak c-${s}"><h3>${SUBJ[s]}</h3>${L.length?L.map(w=>{const c=findCh(w.id);if(!c||!c.rev)return '';const p=revProgress(c.rev);return `<a class="wk" href="#/c/${encodeURIComponent(w.id)}/s${w.sec}"><b>${esc(w.t)}</b><span class="muted">${esc(c.bn)} · ${esc(w.d)}</span>${w.more?`<span class="muted">সাথে: ${esc(w.more)}</span>`:''}<span class="wk-go">রিভিশন শিটে যাও →</span></a><a class="wk-th" href="#/c/${encodeURIComponent(w.id)}/th">⚡ আগে থিওরি</a>`}).join(''):`<p class="muted" style="font-size:14px;margin:0">এখনো কিছু চিহ্নিত করা হয়নি।</p>`}</div>`}).join('')}</div></section>
+    <div class="grid g3">${Object.keys(D.subjects).map(s=>{const L=((X.weak||{})[s]||[]);return `<div class="card weak c-${s}"><h3>${SUBJ[s]}</h3>${L.length?L.map(w=>{const c=findCh(w.id);if(!c||!c.rev)return '';const p=revProgress(c.rev);return `<a class="wk" href="#/c/${encodeURIComponent(w.id)}/s${w.sec}"><b>${esc(w.t)}</b><span class="muted">${esc(c.bn)} · ${esc(w.d)}</span>${w.more?`<span class="muted">সাথে: ${esc(w.more)}</span>`:''}<span class="wk-go">রিভিশন শিটে যাও →</span></a>${(X.theory||{})[c.rev]?`<a class="wk-th" href="#/c/${encodeURIComponent(w.id)}/${w.th||'th'}">⚡ আগে থিওরি</a>`:''}`}).join(''):`<p class="muted" style="font-size:14px;margin:0">এখনো কিছু চিহ্নিত করা হয়নি।</p>`}</div>`}).join('')}</div></section>
   <section class="sec"><div class="row"><h2>বিষয় অনুযায়ী</h2></div>
     <div class="grid g3">${Object.entries(D.subjects).map(([s,v])=>`
       <a class="card subj c-${s}" href="#/s/${s}"><h3>${v.name}</h3>
@@ -272,7 +272,7 @@ function chapterPage(id,flag){
   store.set('mist.last',c.id);
   const key=c.rev,r=key?D.rev[key]:null;
   let filter='all';
-  RVIEW=flag==='th'&&key&&(X.theory||{})[key]?'theory':flag==='tn'&&r&&r.note?'note':'cards';
+  RVIEW=flag&&/^th(-|$)/.test(flag)&&key&&(X.theory||{})[key]?'theory':flag==='tn'&&r&&r.note?'note':'cards';
   const sumQ=c.nreal+c.nmt;
   app.innerHTML=`<div class="fade">
     <div class="crumbs"><a href="#/">হোম</a> › <a href="#/s/${c.sub}">${SUBJ[c.sub]}</a> › ${esc(c.bn)}</div>
@@ -311,6 +311,7 @@ function chapterPage(id,flag){
     </div></div>`;
   if(r){paintRev(key,filter);
     if(flag&&/^s\d+$/.test(flag)){const el=$('#sec-'+flag.slice(1));if(el)setTimeout(()=>el.scrollIntoView({block:'start'}),60)}
+    if(flag&&/^th-/.test(flag)){setTimeout(()=>{const el=document.getElementById(flag);if(el)el.scrollIntoView({block:'start'})},60)}
     else if(RVIEW!=='cards')setTimeout(()=>$('#pane-rev').scrollIntoView({block:'start'}),60)}
   const paintQ=()=>{renderQs(c);document.querySelectorAll('[data-v]').forEach(b=>b.classList.toggle('on',b.dataset.v===qstate.view));document.querySelectorAll('[data-qf]').forEach(b=>b.classList.toggle('on',b.dataset.qf===qstate.f))};
   paintQ();

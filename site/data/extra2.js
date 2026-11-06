@@ -316,7 +316,7 @@ X.notes.gas={5:R`শিটের হাইলাইটে ছাপা ভাঙ
 
 /* ======================= গুণগত রসায়ন ======================= */
 X.theory.qual=R`
-<div class="th-toc"><a data-jump="th-qspec">H বর্ণালি</a><a data-jump="th-qph">ফোটন শক্তি</a><a data-jump="th-qconf">ইলেকট্রন বিন্যাস</a><a data-jump="th-qsol">দ্রাব্যতা</a><a data-jump="th-qksp">Ksp ও অধঃক্ষেপ</a><a data-jump="th-qcom">সম-আয়ন প্রভাব</a><a data-jump="th-qext">দ্রাবক নিষ্কাশন</a><a data-jump="th-qflame">শিখা পরীক্ষা</a></div>
+<div class="th-toc"><a data-jump="th-qion">আয়ন শনাক্তকরণ</a><a data-jump="th-qspec">H বর্ণালি</a><a data-jump="th-qph">ফোটন শক্তি</a><a data-jump="th-qconf">ইলেকট্রন বিন্যাস</a><a data-jump="th-qsol">দ্রাব্যতা</a><a data-jump="th-qksp">Ksp ও অধঃক্ষেপ</a><a data-jump="th-qcom">সম-আয়ন প্রভাব</a><a data-jump="th-qext">দ্রাবক নিষ্কাশন</a><a data-jump="th-qflame">শিখা পরীক্ষা</a></div>
 
 <section class="ths" id="th-qspec"><h3>১. হাইড্রোজেন বর্ণালি</h3>
 <div class="th-f"><b>সূত্র</b> $$\frac1\lambda=R_H\left(\frac1{n_L^2}-\frac1{n_H^2}\right)$$
@@ -360,7 +360,31 @@ $$W_n=W_0\left(\frac{V}{K_Dv+V}\right)^n$$
 <section class="ths" id="th-qflame"><h3>৮. শিখা পরীক্ষা</h3>
 <table class="th-tbl"><tr><th>ধাতু</th><th>বর্ণ</th></tr>
 <tr><td>Li</td><td>টকটকে লাল</td></tr><tr><td>Na</td><td>সোনালি হলুদ</td></tr><tr><td>K</td><td>হালকা বেগুনি</td></tr><tr><td>Ca</td><td>ইটের মতো লাল</td></tr><tr><td>Sr</td><td>উজ্জ্বল লাল</td></tr><tr><td>Ba</td><td>আপেল সবুজ</td></tr></table>
-`+ex(R`<b>প্রশ্ন ১২৯:</b> গাঢ় HCl দিয়ে ভেজানো হয় — উদ্বায়ী ক্লোরাইড তৈরি হয়, তাই শিখায় দ্রুত বাষ্পীভূত হয়ে বর্ণ দেয়।`)+R`</section>`;
+`+ex(R`<b>প্রশ্ন ১২৯:</b> গাঢ় HCl দিয়ে ভেজানো হয় — উদ্বায়ী ক্লোরাইড তৈরি হয়, তাই শিখায় দ্রুত বাষ্পীভূত হয়ে বর্ণ দেয়।`)+R`</section>
+
+<section class="ths" id="th-qion"><h3>৯. আয়ন শনাক্তকরণ <small>🎯 Weak Spot — পরীক্ষার আগে এটা আবার দেখো</small></h3>
+<p><b>ক্যাটায়ন:</b> প্রথমে NaOH (বা NH₄OH) দাও — অধঃক্ষেপের <b>রং</b> আর <b>আধিক্যে দ্রবীভূত হয় কি না</b> দেখেই বেশিরভাগ শনাক্ত হয়।</p>
+<table class="th-tbl"><tr><th>আয়ন</th><th>বিকারক → পর্যবেক্ষণ</th></tr>
+<tr><td>NH₄⁺</td><td>NaOH + তাপ → NH₃ (ঝাঁঝালো গন্ধ), ভেজা লাল লিটমাস নীল; HCl ভেজা কাঠিতে সাদা ধোঁয়া (NH₄Cl)</td></tr>
+<tr><td>Fe²⁺</td><td>NaOH → <b>সবুজ</b> Fe(OH)₂ &nbsp;·&nbsp; K₃[Fe(CN)₆] → গাঢ় নীল</td></tr>
+<tr><td>Fe³⁺</td><td>NaOH → <b>লালচে বাদামি</b> Fe(OH)₃ &nbsp;·&nbsp; KSCN → রক্তলাল &nbsp;·&nbsp; K₄[Fe(CN)₆] → প্রুশিয়ান ব্লু</td></tr>
+<tr><td>Cu²⁺</td><td>NaOH → হালকা নীল Cu(OH)₂ &nbsp;·&nbsp; NH₄OH আধিক্যে → <b>গাঢ় নীল দ্রবণ</b> [Cu(NH₃)₄]²⁺</td></tr>
+<tr><td>Zn²⁺</td><td>NaOH → সাদা, আধিক্যে দ্রবীভূত &nbsp;·&nbsp; NH₄OH আধিক্যেও <b>দ্রবীভূত</b></td></tr>
+<tr><td>Al³⁺</td><td>NaOH → সাদা জেলির মতো, আধিক্যে দ্রবীভূত &nbsp;·&nbsp; NH₄OH আধিক্যে <b>দ্রবীভূত হয় না</b></td></tr>
+<tr><td>Ca²⁺</td><td>(NH₄)₂C₂O₄ → সাদা CaC₂O₄ &nbsp;·&nbsp; শিখা ইটের মতো লাল</td></tr>
+<tr><td>Pb²⁺</td><td>KI → <b>হলুদ</b> PbI₂ &nbsp;·&nbsp; লঘু HCl → সাদা PbCl₂ (গরম পানিতে দ্রবণীয়)</td></tr>
+<tr><td>Ag⁺</td><td>লঘু HCl → সাদা AgCl, NH₄OH-এ দ্রবণীয়</td></tr></table>
+<p><b>অ্যানায়ন:</b></p>
+<table class="th-tbl"><tr><th>আয়ন</th><th>বিকারক → পর্যবেক্ষণ</th></tr>
+<tr><td>Cl⁻</td><td>AgNO₃ → সাদা AgCl, NH₄OH-এ <b>দ্রবণীয়</b></td></tr>
+<tr><td>Br⁻</td><td>AgNO₃ → হালকা হলুদ AgBr, NH₄OH-এ আংশিক দ্রবণীয়</td></tr>
+<tr><td>I⁻</td><td>AgNO₃ → হলুদ AgI, NH₄OH-এ <b>অদ্রবণীয়</b></td></tr>
+<tr><td>SO₄²⁻</td><td>BaCl₂ → সাদা BaSO₄, লঘু HCl-এ অদ্রবণীয়</td></tr>
+<tr><td>CO₃²⁻</td><td>লঘু HCl → বুদবুদ (CO₂), চুনের পানি ঘোলা</td></tr>
+<tr><td>NO₃⁻</td><td>FeSO₄ দ্রবণ + টেস্টটিউবের গা বেয়ে গাঢ় H₂SO₄ → সংযোগস্থলে <b>বাদামি বলয়</b></td></tr></table>
+<div class="th-key"><b>সবচেয়ে বেশি গুলিয়ে যায়:</b> Zn²⁺ বনাম Al³⁺ (দুটোই সাদা, NaOH আধিক্যে দ্রবীভূত) — পার্থক্য শুধু NH₄OH আধিক্যে: Zn দ্রবীভূত হয়, Al হয় না।<br>Fe²⁺ সবুজ, Fe³⁺ লালচে বাদামি। Cl⁻/Br⁻/I⁻ — রং সাদা → হালকা হলুদ → হলুদ, আর NH₄OH-এ দ্রাব্যতা কমতে থাকে।</div>
+`+ex(R`<b>ক্যাটায়ন:</b> একটি দ্রবণে NaOH দিলে সাদা অধঃক্ষেপ, বেশি NaOH দিলে দ্রবীভূত। আরেক অংশে NH₄OH আধিক্যে দিলেও অধঃক্ষেপ থেকে যায়।
+<p>→ NaOH আধিক্যে দ্রবীভূত: Zn²⁺ বা Al³⁺। NH₄OH আধিক্যে দ্রবীভূত <b>হয়নি</b> → <b>Al³⁺</b>।</p>`)+ex(R`<b>অ্যানায়ন:</b> AgNO₃ দিলে হলুদ অধঃক্ষেপ, NH₄OH দিলেও দ্রবীভূত হয় না → <b>I⁻</b> (AgI)।`)+ex(R`<b>লোহার জারণ অবস্থা:</b> দ্রবণে KSCN দিলে রক্তলাল → Fe³⁺ আছে। সবুজ অধঃক্ষেপ (NaOH) দিলে → Fe²⁺।`)+R`</section>`;
 
 X.sols.qual={
 35:pat('সম-আয়ন প্রভাব, AB₂ টাইপ লবণ: $K_{sp}=s_1(x)^2$। তোমার দ্রাব্যতা নোটের প্রশ্ন এটাই।')+R`
@@ -380,4 +404,10 @@ X.notes.qual={
 10:R`শর্টকাট যাচাই: $\Delta m\times931.5=3.184\times931.5\approx2966$ MeV → প্রতি নিউক্লিয়নে $\approx12.4$ MeV`,
 21:R`শিটের হাইলাইটে ছাপা ভাঙা: $\lambda=\dfrac{16}{3R_H}$ → উত্তর (a)`
 };
+
+/* ======================= Weak spots (homepage) ======================= */
+X.weak=X.weak||{};['Phy','Chem','Math'].forEach(k=>{X.weak[k]=X.weak[k]||[]});
+X.weak.Phy.push({id:'Phy:Magnetism',sec:0,t:'২য় পত্র অধ্যায় ৪ — সূত্রগুলো রিভিশন',d:'সব সূত্র এক নজরে আবার দেখো',more:'রিভিশন শিটে যেগুলো ভুল হয়েছিল'});
+X.weak.Chem.push({id:'Chem:Qualitative Chemistry',sec:0,th:'th-qion',t:'আয়ন শনাক্তকরণ রিভিশন',d:'ক্যাটায়ন (NaOH / NH₄OH) ও অ্যানায়ন (AgNO₃ / BaCl₂) পরীক্ষা',more:'Zn²⁺ বনাম Al³⁺ · Fe²⁺ বনাম Fe³⁺'});
+X.weak.Math.push({id:'Math:Statics',sec:0,t:'স্থিতিবিদ্যা রিভিশন',d:'লব্ধি · লামি · সমান্তরাল বল · ভ্রামক',more:'হেলানো তল · ছেদক ও লামির প্রমাণ'});
 })();
